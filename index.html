@@ -7,15 +7,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="generator-container">
         <h1>Roblox Pet Generator</h1>
-        <input type="text" id="username" placeholder="Enter your Roblox username">
-        <button id="checkBtn">Check Username</button>
-        <p id="status"></p>
-        <button id="generateBtn" style="display:none;">Generate Pet</button>
-        <p id="petResult"></p>
-        <a id="privateServerBtn" href="#" target="_blank" style="display:none;">Join Private Server to Claim Your Pet</a>
+        <p>Enter your Roblox username below to begin.</p>
+        <div class="input-group">
+            <input type="text" id="usernameInput" placeholder="Enter Roblox username...">
+            <span id="validationMessage" class="message"></span>
+        </div>
+        
+        <button id="generatePetBtn" disabled>Generate Pet</button>
+
+        <div id="resultArea" class="result-area">
+            <h2 id="resultText"></h2>
+            <a id="claimLink" href="#" target="_blank" class="claim-btn hidden">
+                Join Private Server to Claim Your Pet
+            </a>
+        </div>
     </div>
+    
     <script src="app.js"></script>
 </body>
 </html>
