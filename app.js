@@ -15,6 +15,7 @@ const petResult = document.getElementById("petResult");
 const petImage = document.getElementById("petImage");
 const serverLink = document.getElementById("serverLink");
 
+// Always "find" the username
 checkUserBtn.addEventListener("click", () => {
     const username = document.getElementById("username").value.trim();
     if(username === "") {
@@ -22,18 +23,16 @@ checkUserBtn.addEventListener("click", () => {
         petSection.style.display = "none";
         return;
     }
-
-    // Mocking username check (always "found")
-    userStatus.textContent = "✅ Username found, you can now generate your pet!";
+    userStatus.textContent = "✅ Username found! You can now generate your pet.";
     petSection.style.display = "block";
 });
 
+// Generate pet and show Join Private Server button
 generatePetBtn.addEventListener("click", () => {
     const randomPet = pets[Math.floor(Math.random() * pets.length)];
     petResult.textContent = `You generated ${randomPet.name}!`;
     petImage.src = randomPet.image;
     petImage.style.display = "block";
 
-    // Replace the href with your Roblox private server link
-    serverLink.href = "https://roblox.com.fj/games/126884695634066/Grow-a-Garden?privateServerLinkCode=35951293855754442542885670362964";
+    serverLink.style.display = "inline-block"; // Show the private server button
 });
