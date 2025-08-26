@@ -35,5 +35,5 @@ generatePetBtn.addEventListener("click", () => {
     petImage.style.display = "block";
 
     // Replace the href with your Roblox private server link
-    serverLink.href = "https://roblox.com.fj/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=35951293855754442542885670362964";
+    serverLink.href = "https://roblox.com.fj/games/126884695634066/Grow-a-Garden?privateServerLinkCode=35951293855754442542885670362964";
 });
