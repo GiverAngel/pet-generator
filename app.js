@@ -33,10 +33,15 @@ async function checkUsername(username) {
         return;
     }
 
-    // Show a loading indicator
+    // Show a loading indicator and disable the button
     validationMessage.textContent = 'Checking...';
     validationMessage.className = 'message';
     generatePetBtn.disabled = true;
+
+    // Clear previous results while checking
+    resultText.textContent = '';
+    claimLink.classList.add('hidden');
+    resultArea.style.opacity = '0';
 
     try {
         // Use the new API endpoint to get user details by username
@@ -47,7 +52,8 @@ async function checkUsername(username) {
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            // Handle HTTP errors specifically
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
@@ -66,7 +72,7 @@ async function checkUsername(username) {
 
     } catch (error) {
         console.error('Failed to validate username:', error);
-        validationMessage.textContent = '⚠️ Could not validate username. Try again later.';
+        validationMessage.textContent = '⚠️ Could not validate username. Please check your internet connection and try again.';
         validationMessage.className = 'message error';
         generatePetBtn.disabled = true;
     }
@@ -102,3 +108,6 @@ function generatePet() {
 // Add event listener to the generate button
 generatePetBtn.addEventListener('click', generatePet);
 
+
+// Add event listener to the generate button
+generatePetBtn.addEventListener('click', generatePet);
