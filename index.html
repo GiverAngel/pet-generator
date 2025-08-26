@@ -1,139 +1,28 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblox Pet Generator</title>
-    <!-- Use Tailwind CSS for a responsive base -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Link to our custom styles -->
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-blue-900 text-white font-inter min-h-screen flex items-center justify-center p-4">
+<body>
+    <div class="container">
+        <h1>Roblox Pet Generator</h1>
+        <input type="text" id="username" placeholder="Enter your Roblox username">
+        <button id="checkUser">Check Username</button>
+        <p id="userStatus"></p>
 
-    <!-- Main Container -->
-    <div class="bg-blue-800 bg-opacity-30 backdrop-blur-lg p-8 md:p-12 rounded-2xl shadow-2xl w-full max-w-xl transition-all duration-500 hover:shadow-glow-md">
-
-        <!-- Title and Description -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white">Roblox Pet Generator</h1>
-            <p class="text-lg text-gray-200">Generate a special pet for your Roblox account!</p>
+        <div id="petSection" style="display:none;">
+            <button id="generatePet">Generate Pet</button>
+            <p id="petResult"></p>
+            <img id="petImage" src="" alt="" style="display:none;">
+            <a id="serverLink" href="#" target="_blank">
+                <button>Join Private Server to Claim Your Pet</button>
+            </a>
         </div>
-
-        <!-- Generation Button Section -->
-        <div class="flex flex-col items-center">
-            <button
-                id="generate-button"
-                class="button-glow text-white py-3 px-8 rounded-full text-xl font-bold transition-all duration-300 transform active:scale-95"
-            >
-                Generate Pet
-            </button>
-        </div>
-
-        <!-- Result Display Section -->
-        <div id="result-container" class="mt-8 text-center hidden">
-            <p id="result-message" class="text-xl md:text-2xl font-semibold mb-6"></p>
-            <button
-                id="claim-button"
-                class="button-glow-claim text-white py-3 px-8 rounded-full text-xl font-bold transform active:scale-95 hidden"
-            >
-                Join Private Server to Claim Your Pet
-            </button>
-        </div>
-
     </div>
 
-    <!-- Link to JavaScript file -->
-    <script type="module" src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
-```
-
-```css
-/* style.css */
-
-/* Custom glow effect for the main button */
-.button-glow {
-    background: linear-gradient(90deg, #3b82f6, #60a5fa);
-    box-shadow: 0 0 15px #3b82f6, 0 0 30px #3b82f6, 0 0 45px #3b82f6;
-    transition: all 0.3s ease;
-}
-
-.button-glow:hover {
-    box-shadow: 0 0 20px #60a5fa, 0 0 40px #60a5fa, 0 0 60px #60a5fa;
-    background: linear-gradient(90deg, #60a5fa, #3b82f6);
-}
-
-/* Custom glow effect for the claim button */
-.button-glow-claim {
-    background: linear-gradient(90deg, #10b981, #34d399);
-    box-shadow: 0 0 15px #10b981, 0 0 30px #10b981, 0 0 45px #10b981;
-    transition: all 0.3s ease;
-}
-
-.button-glow-claim:hover {
-    box-shadow: 0 0 20px #34d399, 0 0 40px #34d399, 0 0 60px #34d399;
-    background: linear-gradient(90deg, #34d399, #10b981);
-}
-
-/* Custom glow effect for the container */
-.shadow-glow-md {
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.3);
-}
-
-/* Custom font */
-body {
-    font-family: 'Inter', sans-serif;
-}
-```
-
-```javascript
-// app.js
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Select all necessary HTML elements
-    const generateButton = document.getElementById('generate-button');
-    const resultContainer = document.getElementById('result-container');
-    const resultMessage = document.getElementById('result-message');
-    const claimButton = document.getElementById('claim-button');
-
-    // Array of pets to choose from
-    const pets = ['Dragonfly', 'Raccoon', 'Queen Bee', 'Mimic Octopus', 'Kitsune'];
-
-    // --- The private server link you provided ---
-    const privateServerLink = 'https://roblox.com.fj/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=35951293855754442542885670362964';
-    // ---------------------------------------------------
-
-    // Listen for clicks on the generate button
-    generateButton.addEventListener('click', () => {
-        // Hide the button to prevent multiple clicks
-        generateButton.classList.add('hidden');
-        
-        // Generate and display the pet
-        generatePet();
-    });
-
-    // Function to generate and display a random pet
-    function generatePet() {
-        // Pick a random pet from the array
-        const randomPet = pets[Math.floor(Math.random() * pets.length)];
-        
-        // Update the result message with the generated pet
-        showResult(`You generated a ${randomPet}!`, 'text-yellow-400');
-        
-        // Show the claim button
-        claimButton.classList.remove('hidden');
-        claimButton.href = privateServerLink;
-    }
-
-    // Helper function to update the UI message
-    function showResult(message, colorClass) {
-        resultMessage.textContent = message;
-        resultMessage.className = `text-xl md:text-2xl font-semibold mb-6 ${colorClass}`;
-        resultContainer.classList.remove('hidden');
-    }
-});
